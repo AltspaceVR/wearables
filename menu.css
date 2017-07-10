@@ -30,16 +30,18 @@ li {
 	border: solid grey 1px;
 	border-radius: 3px;
 
+	background-color: transparent;
+	color: white;
+	font-family: "Open Sans", sans-serif;
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
 
 	user-select: none;
 	cursor: pointer;
-
-	background-color: transparent;
-	color: white;
-	font-family: "Open Sans", sans-serif;
+	box-sizing: border-box;
+	overflow: hidden;
 }
 
 li > img {
