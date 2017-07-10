@@ -1,7 +1,6 @@
 'use strict';
 
 var connection, userData;
-var clientId = /&clientId=([^&]+)/.exec(window.location.search)[1];
 
 function userPoly(){
     return new Promise(function(resolve, reject){
@@ -62,7 +61,5 @@ Promise.all([
             });
         });
     });
-
-
 })
 .catch(function(err){ console.log(err); });

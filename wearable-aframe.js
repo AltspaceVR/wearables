@@ -40,7 +40,6 @@ AFRAME.registerComponent('wearable', {
 		this.groupRef.on('value', function(snapshot)
 		{
 			var value = snapshot.val();
-			console.log(value);
 			if(value === null){
 				self.el.object3DMap.mesh.visible = false;
 			}
