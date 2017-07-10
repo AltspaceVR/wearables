@@ -46,7 +46,8 @@ AFRAME.registerComponent('wearable', {
 
 				self.el.setAttribute('obj-model', 'obj', '.model.'+model);
 				self.el.setAttribute('material', 'src', '.texture.'+texture);
-				self.el.object3DMap.mesh.visible = true;
+				if(self.el.object3DMap.mesh)
+					self.el.object3DMap.mesh.visible = true;
 
 				var fta = self.el.components['fit-to-avatar'];
 				setTimeout(fta.adjust.bind(fta), 1000);
@@ -65,11 +66,25 @@ AFRAME.registerComponent('fit-to-avatar', {
 
 		var self = this;
 		var userId = this.el.sceneEl.systems['sync-system'].userInfo.userId;
-		var fl = new AFRAME.THREE.XHRLoader();
-		fl.setWithCredentials(true);
-		fl.load('https://account.altvr.com/api/v1/users/'+userId, function(data)
+
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+		xhr.responseType = 'json';
+		xhr.open('GET', 'https://account.altvr.com/api/v1/users/'+userId);
+		xhr.setRequestHeader('Access-Control-Request-Headers', 'ETag');
+		if(self.lastRequestETag)
+			xhr.setRequestHeader('If-Not-Modified', self.lastRequestETag);
+
+		xhr.addEventListener('readystatechange', function(data)
 		{
-			var data = JSON.parse(data);
+			if(xhr.readyState !== XMLHttpRequest.DONE) return;
+			if(xhr.status !== 200 && xhr.status !== 304){
+				console.warn('Could not fetch avatar info');
+				return;
+			}
+			//self.lastRequestETag = xhr.getResponseHeader('ETag');
+
+			var data = xhr.response;
 			var avatarId = data.users[0].user_avatar.config.avatar.avatar_sid;
 
 			self.el.setAttribute('position', neckPositions[avatarId].join(' '));
@@ -78,6 +93,7 @@ AFRAME.registerComponent('fit-to-avatar', {
 			else
 				self.el.setAttribute('n-skeleton-parent', 'part', 'neck');
 		});
+		xhr.send();
 	}
 });
 
