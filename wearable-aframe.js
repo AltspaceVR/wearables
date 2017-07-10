@@ -50,7 +50,7 @@ AFRAME.registerComponent('wearable', {
 					self.el.object3DMap.mesh.visible = true;
 
 				var fta = self.el.components['fit-to-avatar'];
-				setTimeout(fta.adjust.bind(fta), 1000);
+				setTimeout(function(){ fta.adjust(self.data.group); }, 1000);
 			}
 		});
 	}
@@ -58,7 +58,7 @@ AFRAME.registerComponent('wearable', {
 
 AFRAME.registerComponent('fit-to-avatar', {
 	dependencies: ['sync'],
-	adjust: function()
+	adjust: function(groupId)
 	{
 		if(!this.el.components.sync.isMine){
 			return;
@@ -71,7 +71,7 @@ AFRAME.registerComponent('fit-to-avatar', {
 		xhr.withCredentials = true;
 		xhr.responseType = 'json';
 		xhr.open('GET', 'https://account.altvr.com/api/v1/users/'+userId);
-		xhr.setRequestHeader('Access-Control-Request-Headers', 'ETag');
+
 		if(self.lastRequestETag)
 			xhr.setRequestHeader('If-Not-Modified', self.lastRequestETag);
 
@@ -87,25 +87,33 @@ AFRAME.registerComponent('fit-to-avatar', {
 			var data = xhr.response;
 			var avatarId = data.users[0].user_avatar.config.avatar.avatar_sid;
 
-			self.el.setAttribute('position', neckPositions[avatarId].join(' '));
-			if(/^robothead/.test(avatarId))
-				self.el.setAttribute('n-skeleton-parent', 'part', 'head');
+			if(positions[groupId] && positions[groupId][avatarId])
+				self.el.setAttribute('position', positions[groupId][avatarId].join(' '));
 			else
-				self.el.setAttribute('n-skeleton-parent', 'part', 'neck');
+				self.el.setAttribute('position', '0 0 0');
+
+			if(groupId === 'neck')
+			{
+				if(/^robothead/.test(avatarId))
+					self.el.setAttribute('n-skeleton-parent', 'part', 'head');
+				else
+					self.el.setAttribute('n-skeleton-parent', 'part', 'neck');
+			}
 		});
 		xhr.send();
 	}
 });
 
-var neckPositions = {
-	'rubenoid-male-01': [0, -0.03, -0.07],
-	'rubenoid-female-01': [0, -0.05, -0.04],
-	'robothead-roundguy-01': [0, -0.07, -0.16],
-	'robothead-propellerhead-01': [0, -0.2, 0],
-	'a-series-m01': [0, -0.04, -0.07],
-	'pod-classic': [0, 0, -0.09],
-	's-series-f01': [0, 0, -0.09],
-	's-series-m01': [0, -0.03, -0.15],
-	'x-series-m01': [0,0,0],
-	'x-series-m02': [0, -0.04, -0.07]
+var positions = {
+	neck: {
+		'rubenoid-male-01': [0, -0.03, -0.07],
+		'rubenoid-female-01': [0, -0.05, -0.04],
+		'robothead-roundguy-01': [0, -0.07, -0.16],
+		'robothead-propellerhead-01': [0, -0.2, 0],
+		'a-series-m01': [0, -0.04, -0.07],
+		'pod-classic': [0, 0, -0.09],
+		's-series-f01': [0, 0, -0.09],
+		's-series-m01': [0, -0.03, -0.15],
+		'x-series-m02': [0, -0.04, -0.07]
+	}
 };

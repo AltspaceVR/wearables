@@ -16,8 +16,8 @@ function getNearestAncestor(el, selector){
 
 function select(evt)
 {
-    var parentList = getNearestAncestor(evt.target, 'ol.wearable-selector');
-    var listItem = getNearestAncestor(evt.target, 'ol.wearable-selector > li');
+    var parentList = getNearestAncestor(evt.target, 'ul.wearable-selector');
+    var listItem = getNearestAncestor(evt.target, 'ul.wearable-selector > li');
     var group = parentList.dataset.wearableGroup;
     var groupRef = connection.userRef.child('wearable').child(group);
     var wearable = listItem.dataset.wearable;
@@ -42,7 +42,7 @@ Promise.all([
 
     connection.userRef = connection.app.child('users').child(userData.userId);
 
-    var groupsList = document.querySelectorAll('ol.wearable-selector');
+    var groupsList = document.querySelectorAll('ul.wearable-selector');
     groupsList = Array.prototype.slice.call(groupsList);
     groupsList.forEach(function(groupEl)
     {
