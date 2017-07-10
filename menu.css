@@ -12,9 +12,32 @@ body {
 }
 
 ol {
-	
+	list-style-type: none;
+	padding-left: 0;
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 
 li {
+	width: 125px;
+	margin: 10px;
+	border: solid grey 2px;
+	border-radius: 3px;
 
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	user-select: none;
+	cursor: pointer;
+}
+
+li > img {
+	width: 100%;
+}
+
+li:hover {
+	border-color: cyan;
 }

@@ -3,27 +3,26 @@
 <head>
 	<title>Wearable</title>
 	<script src='https://aframe.io/releases/0.3.0/aframe.min.js'></script>
-	<script src='https://sdk.altvr.com/libs/altspace.js/2.6.0/altspace.min.js'></script>
-	<script src='wearable.js'></script>
+	<!--script src='https://sdk.altvr.com/libs/altspace.js/2.6.0/altspace.min.js'></script-->
+	<script src='lib/altspace.js'></script>
+	<script src='wearable-aframe.js'></script>
 </head>
 <body>
 <a-scene altspace='fullspace: true' sync-system='app: Wearables; author: AltspaceVR;' wearable-menu>
 
 	<a-assets>
 
-		<a-asset-item id='boxModel' src='models/box.obj'></a-asset-item>
-		<img id='mazeTex' src='textures/maze.jpg'></a-asset>
+		<a-asset-item class='model box' src='models/box.obj'></a-asset-item>
+		<img class='texture maze' src='textures/maze.jpg'></a-asset>
 		<a-mixin id='tie'
 			n-skeleton-parent='part: neck' rotation='0 90 0' position='0 -0.03 -0.07'
 			collapse-model sync sync-n-skeleton-parent
-		></a-mixin>
-		<a-mixin id='maze-tie'
-			obj-model='obj: #boxModel' material='shader: flat; src: #mazeTex'
+			obj-model material='shader: flat' wearable='group: neck'
 		></a-mixin>
 
 	</a-assets>
 
-	<a-entity one-per-user='mixin: tie maze-tie'></a-entity>
+	<a-entity one-per-user='mixin: tie;'></a-entity>
 
 </a-scene>
 </body>

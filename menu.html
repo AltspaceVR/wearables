@@ -3,18 +3,32 @@
 <head>
 	<title>Wearable (Menu)</title>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
-	<script src='https://sdk.altvr.com/libs/altspace.js/2.6.0/altspace.min.js'></script>
+	<!--script src='https://sdk.altvr.com/libs/altspace.js/2.6.0/altspace.min.js'></script-->
+	<script src='lib/altspace.js'></script>
 	<link rel='stylesheet' href='menu.css'/>
-	<script src='wearable.js'></script>
 </head>
 <body>
 	<div id='container'>
-		<h1>Choose your evening wear:</h1>
-		<ol>
-			<li id='maze-tie' data-model='box' data-texture='maze'>
+		<h1>Choose your tie:</h1>
+		<ol class='wearable-selector' data-wearable-group='neck'>
+			<li id='none' data-wearable>
+				(None)
+			</li>
+			<li id='maze-tie' data-wearable='box/maze'>
+				<img src='thumbnails/maze.jpg' />
+			</li>
+			<li id='maze-tie' data-wearable='box/maze'>
+				<img src='thumbnails/maze.jpg' />
+			</li>
+			<li id='maze-tie' data-wearable='box/maze'>
+				<img src='thumbnails/maze.jpg' />
+			</li>
+			<li id='maze-tie' data-wearable='box/maze'>
 				<img src='thumbnails/maze.jpg' />
 			</li>
 		</ol>
 	</div>
+
+	<script src='wearable-menu.js'></script>
 </body>
 </html>
