@@ -17,16 +17,13 @@ AFRAME.registerComponent('wearable-menu', {
 	init: function()
 	{
 		var url = window.location.href.replace(/\/(index.html)?\?/, '/menu.html?');
-		console.log(this.el.systems['sync-system'].clientId);
-		var clientId = this.el.systems['sync-system'].clientId;
-		url += '&clientId='+clientId;
 
 		altspace.open(url, '_experience', {hidden: true});
 	}
 });
 
 AFRAME.registerComponent('wearable', {
-	dependencies: ['sync'],
+	dependencies: ['sync', 'fit-to-avatar'],
 	schema: {
 		group: {type: 'string'}
 	},
@@ -50,7 +47,49 @@ AFRAME.registerComponent('wearable', {
 				self.el.setAttribute('obj-model', 'obj', '.model.'+model);
 				self.el.setAttribute('material', 'src', '.texture.'+texture);
 				self.el.object3DMap.mesh.visible = true;
+
+				var fta = self.el.components['fit-to-avatar'];
+				setTimeout(fta.adjust.bind(fta), 1000);
 			}
 		});
 	}
 });
+
+AFRAME.registerComponent('fit-to-avatar', {
+	dependencies: ['sync'],
+	adjust: function()
+	{
+		if(!this.el.components.sync.isMine){
+			return;
+		}
+
+		var self = this;
+		var userId = this.el.sceneEl.systems['sync-system'].userInfo.userId;
+		var fl = new AFRAME.THREE.XHRLoader();
+		fl.setWithCredentials(true);
+		fl.load('https://account.altvr.com/api/v1/users/'+userId, function(data)
+		{
+			var data = JSON.parse(data);
+			var avatarId = data.users[0].user_avatar.config.avatar.avatar_sid;
+
+			self.el.setAttribute('position', neckPositions[avatarId].join(' '));
+			if(/^robothead/.test(avatarId))
+				self.el.setAttribute('n-skeleton-parent', 'part', 'head');
+			else
+				self.el.setAttribute('n-skeleton-parent', 'part', 'neck');
+		});
+	}
+});
+
+var neckPositions = {
+	'rubenoid-male-01': [0, -0.03, -0.07],
+	'rubenoid-female-01': [0, -0.05, -0.04],
+	'robothead-roundguy-01': [0, -0.07, -0.16],
+	'robothead-propellerhead-01': [0, -0.2, 0],
+	'a-series-m01': [0, -0.04, -0.07],
+	'pod-classic': [0, 0, -0.09],
+	's-series-f01': [0, 0, -0.09],
+	's-series-m01': [0, -0.03, -0.15],
+	'x-series-m01': [0,0,0],
+	'x-series-m02': [0, -0.04, -0.07]
+};

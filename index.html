@@ -12,13 +12,19 @@
 
 	<a-assets>
 
+		<!-- models -->
 		<a-asset-item class='model box' src='models/box.obj'></a-asset-item>
+
+		<!-- textures -->
 		<img class='texture maze' src='textures/maze.jpg'></img>
 		<img class='texture polkadot' src='textures/polkadot.png'></img>
+
+		<!-- mixins -->
 		<a-mixin id='tie'
-			n-skeleton-parent='part: neck' rotation='0 90 0' position='0 -0.03 -0.07'
+			n-skeleton-parent='part: neck' rotation='0 90 0'
 			collapse-model sync sync-n-skeleton-parent
 			obj-model material='shader: flat' wearable='group: neck'
+			fit-to-avatar sync-transform
 		></a-mixin>
 
 	</a-assets>
