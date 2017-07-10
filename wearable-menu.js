@@ -10,7 +10,7 @@ function userPoly(){
 }
 
 function getNearestAncestor(el, selector){
-    if(!el) return null;
+    if(el == document) return null;
     else if(el.matches(selector)) return el;
     else return getNearestAncestor(el.parentElement, selector);
 }
@@ -22,7 +22,11 @@ function select(evt)
     var group = parentList.dataset.wearableGroup;
     var groupRef = connection.userRef.child('wearable').child(group);
     var wearable = listItem.dataset.wearable;
+
     wearable ? groupRef.set(wearable) : groupRef.remove();
+
+    parentList.querySelector('.selected').classList.remove('selected');
+    listItem.classList.add('selected');
 }
 
 Promise.all([
@@ -39,10 +43,26 @@ Promise.all([
 
     connection.userRef = connection.app.child('users').child(userData.userId);
 
-    var selectablesList = document.querySelectorAll('ol.wearable-selector > li');
-    selectablesList = Array.prototype.slice.call(selectablesList);
-    selectablesList.forEach(function(el){
-        el.addEventListener('click', select);
+    var groupsList = document.querySelectorAll('ol.wearable-selector');
+    groupsList = Array.prototype.slice.call(groupsList);
+    groupsList.forEach(function(groupEl)
+    {
+        var groupRef = connection.userRef.child('wearable').child(groupEl.dataset.wearableGroup);
+        groupRef.once('value', function(snapshot)
+        {
+            var value = snapshot.val() || "";
+
+            var selectablesList = groupEl.querySelectorAll('li');
+            selectablesList = Array.prototype.slice.call(selectablesList);
+            selectablesList.forEach(function(el){
+                if(el.dataset.wearable == value)
+                    el.classList.add('selected');
+
+                el.addEventListener('click', select);
+            });
+        });
     });
+
+
 })
 .catch(function(err){ console.log(err); });
