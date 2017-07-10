@@ -13,15 +13,17 @@
 	<a-assets>
 
 		<!-- models -->
-		<a-asset-item class='model box' src='models/box.obj'></a-asset-item>
+		<a-asset-item class='model Tie1' src='models/BillNye_Tie1.obj'></a-asset-item>
+		<a-asset-item class='model Tie2' src='models/BillNye_Tie2.obj'></a-asset-item>
+		<a-asset-item class='model Tie3' src='models/BillNye_Tie3.obj'></a-asset-item>
+		<a-asset-item class='model Tie4' src='models/BillNye_Tie4.obj'></a-asset-item>
 
 		<!-- textures -->
-		<img class='texture maze' src='textures/maze.jpg'></img>
-		<img class='texture polkadot' src='textures/polkadot.png'></img>
+		<img class='texture BillNyeTies' src='textures/BillNyeTies_Texture.png'></img>
 
 		<!-- mixins -->
 		<a-mixin id='tie'
-			n-skeleton-parent='part: neck' rotation='0 90 0'
+			n-skeleton-parent='part: neck' scale='0.01 0.01 0.01'
 			collapse-model sync sync-n-skeleton-parent
 			obj-model material='shader: flat' wearable='group: neck'
 			fit-to-avatar sync-transform
