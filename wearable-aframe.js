@@ -60,12 +60,12 @@ AFRAME.registerComponent('fit-to-avatar', {
 	dependencies: ['sync'],
 	adjust: function(groupId)
 	{
-		if(!this.el.components.sync.isMine){
-			return;
-		}
-
 		var self = this;
 		var userId = this.el.sceneEl.systems['sync-system'].userInfo.userId;
+		if(this.el.dataset.creatorUserId === userId)
+			this.el.components.sync.takeOwnership();
+		else
+			return;
 
 		var xhr = new XMLHttpRequest();
 		xhr.withCredentials = true;
@@ -86,6 +86,7 @@ AFRAME.registerComponent('fit-to-avatar', {
 
 			var data = xhr.response;
 			var avatarId = data.users[0].user_avatar.config.avatar.avatar_sid;
+			console.log(avatarId);
 
 			if(positions[groupId] && positions[groupId][avatarId])
 				self.el.setAttribute('position', positions[groupId][avatarId].join(' '));
