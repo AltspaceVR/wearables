@@ -57,7 +57,7 @@ AFRAME.registerComponent('wearable', {
 		this.avatarRef.on('value', function(snapshot)
 		{
 			var avatarId = snapshot.val();
-			
+
 			if(positions[self.data.group] && positions[self.data.group][avatarId])
 				self.el.setAttribute('position', positions[self.data.group][avatarId].join(' '));
 			else
@@ -101,7 +101,19 @@ AFRAME.registerComponent('wearable', {
 
 			var data = xhr.response;
 			var avatarId = data.users[0].user_avatar.config.avatar.avatar_sid;
-			self.avatarRef.set(avatarId);
+			var customId = data.users[0].avatar_customization_id;
+
+			// lisa's custom avatar
+			if(customId === "705088468077773509")
+				self.avatarRef.set('rubenoid-female-01');
+
+			// bill nye's custom avatar
+			else if(customId === "719656889377358624")
+				self.avatarRef.set('rubenoid-male-01');
+
+			// everyone else
+			else
+				self.avatarRef.set(avatarId);
 		});
 		xhr.send();
 	}
