@@ -17,8 +17,8 @@ AFRAME.registerComponent('wearable-menu', {
 	init: function()
 	{
 		var url = window.location.href.replace(/\/(index.html)?\?/, '/menu.html?');
-
-		altspace.open(url, '_experience', {hidden: true});
+		var iconUrl = window.location.href.replace(/\/[^\/]*$/, '/icon-circle-bowtie.png');
+		altspace.open(url, '_experience', {hidden: true, icon: iconUrl});
 	}
 });
 
