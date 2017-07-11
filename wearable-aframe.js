@@ -32,6 +32,7 @@ AFRAME.registerComponent('wearable', {
 		var syncSys = this.el.components.sync.syncSys;
 		var userRef = syncSys.connection.app.child('users').child(this.el.dataset.creatorUserId);
 		this.groupRef = userRef.child('wearable').child(this.data.group);
+		this.avatarRef = userRef.child('avatarId');
 
 		var self = this;
 		this.groupRef.on('value', function(snapshot)
@@ -49,16 +50,30 @@ AFRAME.registerComponent('wearable', {
 				if(self.el.object3DMap.mesh)
 					self.el.object3DMap.mesh.visible = true;
 
-				var fta = self.el.components['fit-to-avatar'];
-				setTimeout(function(){ fta.adjust(self.data.group); }, 1000);
+				self.adjust();
 			}
 		});
-	}
-});
 
-AFRAME.registerComponent('fit-to-avatar', {
-	dependencies: ['sync'],
-	adjust: function(groupId)
+		this.avatarRef.on('value', function(snapshot)
+		{
+			var avatarId = snapshot.val();
+			
+			if(positions[self.data.group] && positions[self.data.group][avatarId])
+				self.el.setAttribute('position', positions[self.data.group][avatarId].join(' '));
+			else
+				self.el.setAttribute('position', '0 0 0');
+
+			if(self.data.group === 'neck')
+			{
+				if(/^robothead/.test(avatarId))
+					self.el.setAttribute('n-skeleton-parent', 'part', 'head');
+				else
+					self.el.setAttribute('n-skeleton-parent', 'part', 'neck');
+			}
+		});
+	},
+
+	adjust: function()
 	{
 		var self = this;
 		var userId = this.el.sceneEl.systems['sync-system'].userInfo.userId;
@@ -86,20 +101,7 @@ AFRAME.registerComponent('fit-to-avatar', {
 
 			var data = xhr.response;
 			var avatarId = data.users[0].user_avatar.config.avatar.avatar_sid;
-			console.log(avatarId);
-
-			if(positions[groupId] && positions[groupId][avatarId])
-				self.el.setAttribute('position', positions[groupId][avatarId].join(' '));
-			else
-				self.el.setAttribute('position', '0 0 0');
-
-			if(groupId === 'neck')
-			{
-				if(/^robothead/.test(avatarId))
-					self.el.setAttribute('n-skeleton-parent', 'part', 'head');
-				else
-					self.el.setAttribute('n-skeleton-parent', 'part', 'neck');
-			}
+			self.avatarRef.set(avatarId);
 		});
 		xhr.send();
 	}
