@@ -31,7 +31,8 @@ function select(evt)
 Promise.all([
 	altspace.utilities.sync.connect({
 		authorId: 'AltspaceVR',
-		appId: 'Wearables'
+		appId: 'Wearables',
+		baseRefUrl: 'https://altspace-wearables.firebaseio.com/'
 	}),
 	(altspace.getUser || userPoly)()
 ])
