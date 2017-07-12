@@ -15,7 +15,6 @@ body {
 
 #container {
 	width: 500px;
-	margin-bottom: 40px;
 
 	display: flex;
 	flex-direction: column;
