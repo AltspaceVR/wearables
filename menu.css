@@ -1,13 +1,21 @@
+html {
+	height: 100%;
+}
+
 body {
+	height: 100%;
+	margin: 0;
+
 	display: flex;
 	justify-content: center;
+	align-items: flex-end;
+
 	font-family: "Varela Round", sans-serif;
 }
 
 #container {
 	width: 500px;
-	position: relative;
-	top: 220px;
+	margin-bottom: 40px;
 
 	display: flex;
 	flex-direction: column;
